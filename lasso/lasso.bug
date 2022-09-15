@@ -5,7 +5,7 @@ model {
     mu[i] <- inprod(x[i, ], b[])
   }
 
-  tt <- lambda 
+  tt <- lambda
   for(j in 1:p) {
     b[j] ~ ddexp(0, tt)
   }

@@ -18,6 +18,7 @@ summary(Hitters)
 #Check NA's and fix
 sum(is.na(Hitters$Salary))
 Hitters <- na.omit(Hitters)
+str(Hitters)
 
 #
 # The Lasso
@@ -42,11 +43,18 @@ grid <- 10^seq(10, -2, length = 100)
 #Fit lasso model for several values of lambda
 lasso.mod <- glmnet(x[train, ] , y[train], alpha = 1, lambda = grid)
 plot(lasso.mod)
+names(lasso.mod)
+lasso.mod$beta
 
 #CV
 set.seed(1)
 cv.out <- cv.glmnet(x[train, ], y[train], alpha = 1)
 plot(cv.out)
+names(cv.out)
+cv.out$lambda
+cv.out$lambda.min
+cv.out$lambda.1se
+cv.out$glmnet.fit
 
 #Take best lambda for lasso model
 bestlam <- cv.out$lambda.min
@@ -79,7 +87,7 @@ lasso.m <- jags.model("lasso.bug", d.jags)
 #Burn-in
 jags.samples(lasso.m, c("b", "tau"), 500)
 #Samples
-smp.jags <- jags.samples(lasso.m, c("b", "tau"), 
+smp.jags <- jags.samples(lasso.m, c("b", "tau"),
   n.iter = 100000, thin = 10)
 smp.jags
 
@@ -89,5 +97,3 @@ lasso.coef
 
 
 save(file = "lasso.RData", list = ls())
-
-
